@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Guide to the Indian Constitution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Calm Harmony (Light neutrals with muted teal accents) -->
+    <!-- Application Structure Plan: A single-page app featuring a filterable and searchable grid of interactive cards. The structure prioritizes user exploration over the static, linear format of the original document. Users can instantly filter by category ('Famous', 'State-related') or search by keyword/number, making information discovery fast and intuitive. This card-based grid is more engaging and mobile-friendly than a simple table. -->
+    <!-- Visualization & Content Choices: The core data (constitutional articles) is textual. Goal: Organize & Explore. Method: The primary presentation is a dynamic grid of styled HTML cards, which is more visually appealing and scannable than a table. Interaction: Filtering is handled by JS functions toggling card visibility based on data attributes. A live search bar provides immediate feedback. Justification: This interactive approach transforms a static reference document into a useful exploration tool. Library: Vanilla JS and Tailwind CSS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .card-container {
+            perspective: 1000px;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1);
+        }
+        .filter-btn.active {
+            background-color: #0d9488; /* teal-600 */
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-5xl font-bold text-teal-800 mb-2">🇮🇳 Guide to the Indian Constitution</h1>
+            <p class="text-md md:text-lg text-slate-600 max-w-3xl mx-auto">An interactive tool to explore, search, and understand key articles of India's foundational legal document.</p>
+        </header>
+
+        <div class="sticky top-0 bg-slate-50/80 backdrop-blur-sm z-10 py-4 mb-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-grow">
+                        <input type="text" id="searchInput" placeholder="Search by article number or keyword (e.g., '21' or 'Freedom')" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-shadow duration-200 shadow-sm">
+                    </div>
+                    <div class="flex items-center justify-center gap-2">
+                        <button class="filter-btn active px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-white border border-slate-300 hover:bg-teal-500 hover:text-white" data-filter="all">All</button>
+                        <button class="filter-btn px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-white border border-slate-300 hover:bg-teal-500 hover:text-white" data-filter="famous">Famous Articles</button>
+                        <button class="filter-btn px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-white border border-slate-300 hover:bg-teal-500 hover:text-white" data-filter="state">State-related</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <main id="articlesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Article cards will be dynamically inserted here -->
+        </main>
+
+    </div>
+
+    <script>
+        const articles = [
+            { id: '14', subject: 'Equality before law', category: 'famous' },
+            { id: '15', subject: 'Prohibition of discrimination', category: 'famous' },
+            { id: '17', subject: 'Abolition of untouchability', category: 'famous' },
+            { id: '19', subject: 'Freedom of speech and expression', category: 'famous' },
+            { id: '21', subject: 'Protection of life and personal liberty', category: 'famous' },
+            { id: '21A', subject: 'Right to education (6–14 years)', category: 'famous' },
+            { id: '32', subject: 'Right to constitutional remedies (Dr. Ambedkar called it the "heart and soul")', category: 'famous' },
+            { id: '44', subject: 'Uniform Civil Code (Directive Principle)', category: 'famous' },
+            { id: '51A', subject: 'Fundamental Duties', category: 'famous' },
+            { id: '72', subject: 'President\'s power to pardon', category: 'famous' },
+            { id: '110', subject: 'Money Bill definition', category: 'famous' },
+            { id: '112', subject: 'Union Budget (Annual Financial Statement)', category: 'famous' },
+            { id: '123', subject: 'President\'s ordinance-making power', category: 'famous' },
+            { id: '131-136', subject: 'Powers of the Supreme Court', category: 'famous' },
+            { id: '148', subject: 'Comptroller and Auditor General (CAG)', category: 'famous' },
+            { id: '243', subject: 'Panchayati Raj (73rd Amendment)', category: 'famous' },
+            { id: '280', subject: 'Finance Commission', category: 'famous' },
+            { id: '324', subject: 'Election Commission', category: 'famous' },
+            { id: '356', subject: 'President’s Rule (State Emergency)', category: 'famous' },
+            { id: '370', subject: 'Special status to Jammu & Kashmir (now revoked in 2019)', category: 'famous' },
+            { id: '371', subject: 'Special provisions for some states like Maharashtra, Gujarat, Nagaland, etc.', category: 'famous' },
+            { id: '1', subject: 'India is a Union of States; lists Indian states and territories.', category: 'state' },
+            { id: '2', subject: 'Parliament can admit or establish new states into the Union.', category: 'state' },
+            { id: '3', subject: 'Parliament can create, merge, split, rename or change boundaries of states.', category: 'state' },
+            { id: '4', subject: 'Laws under Article 2 & 3 are not called Constitutional Amendments.', category: 'state' },
+            { id: '239', subject: 'How Union Territories are administered (by President through an Administrator or LG).', category: 'state' },
+            { id: '239A', subject: 'Special provisions for Puducherry (elected assembly + council of ministers).', category: 'state' },
+            { id: '239AA', subject: 'Special status to Delhi (National Capital Territory) with assembly & CM.', category: 'state' },
+            { id: '240', subject: 'President can make regulations for UTs like Andaman & Lakshadweep.', category: 'state' }
+        ];
+
+        const articlesGrid = document.getElementById('articlesGrid');
+        const searchInput = document.getElementById('searchInput');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        let currentFilter = 'all';
+
+        const renderArticles = () => {
+            articlesGrid.innerHTML = '';
+            const searchTerm = searchInput.value.toLowerCase();
+
+            const filteredArticles = articles.filter(article => {
+                const categoryMatch = currentFilter === 'all' || article.category === currentFilter;
+                const searchMatch = article.id.toLowerCase().includes(searchTerm) || article.subject.toLowerCase().includes(searchTerm);
+                return categoryMatch && searchMatch;
+            });
+
+            if (filteredArticles.length === 0) {
+                articlesGrid.innerHTML = `<p class="text-slate-500 col-span-full text-center py-10">No articles found matching your criteria.</p>`;
+                return;
+            }
+
+            filteredArticles.forEach(article => {
+                const card = document.createElement('div');
+                card.className = 'card-container';
+                card.innerHTML = `
+                    <div class="card bg-white rounded-xl shadow-md p-6 flex flex-col h-full border border-slate-200">
+                        <div class="flex-shrink-0 mb-3">
+                            <span class="text-sm font-semibold text-teal-600 bg-teal-100 px-3 py-1 rounded-full">Article ${article.id}</span>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-slate-700 text-lg">${article.subject}</p>
+                        </div>
+                    </div>
+                `;
+                articlesGrid.appendChild(card);
+            });
+        };
+
+        searchInput.addEventListener('keyup', renderArticles);
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentFilter = button.dataset.filter;
+                renderArticles();
+            });
+        });
