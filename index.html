@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Guide to the Indian Constitution</title>
+    <title>Ishan Bathla - Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chosen Palette: Calm Harmony (Light neutrals with muted teal accents) -->
-    <!-- Application Structure Plan: A single-page app featuring a filterable and searchable grid of interactive cards. The structure prioritizes user exploration over the static, linear format of the original document. Users can instantly filter by category ('Famous', 'State-related') or search by keyword/number, making information discovery fast and intuitive. This card-based grid is more engaging and mobile-friendly than a simple table. -->
-    <!-- Visualization & Content Choices: The core data (constitutional articles) is textual. Goal: Organize & Explore. Method: The primary presentation is a dynamic grid of styled HTML cards, which is more visually appealing and scannable than a table. Interaction: Filtering is handled by JS functions toggling card visibility based on data attributes. A live search bar provides immediate feedback. Justification: This interactive approach transforms a static reference document into a useful exploration tool. Library: Vanilla JS and Tailwind CSS. -->
+    <!-- Chosen Palette: Calm Harmony (Light neutrals with muted teal accents, with a touch of soft gray) -->
+    <!-- Application Structure Plan: A single-page application with distinct, scrollable sections: Hero (introduction), About (detailed bio), Skills (categorized list), Projects (interactive cards), and Contact (form). This structure provides a clear, linear flow for visitors while allowing quick navigation via internal links. Each section is designed to be visually distinct yet cohesive, facilitating easy consumption of information. -->
+    <!-- Visualization & Content Choices: Hero: Textual introduction with a call to action. About: Textual bio. Skills: List with simple HTML/CSS icons (Unicode characters) for visual interest. Projects: Dynamic HTML cards for each project, with placeholder images (placehold.co) and interactive "Learn More" buttons (JS show/hide details). Contact: Simple HTML form. Goal: Inform, Showcase, Engage. Method: Primarily textual content with card-based layouts for projects. Interaction: Smooth scrolling navigation, project detail toggles. Justification: This approach balances comprehensive information with an engaging, easy-to-navigate user experience. Library: Vanilla JS and Tailwind CSS. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,131 +15,405 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            /* New attractive background */
+            background: radial-gradient(at top left, #f0f9ff, #e0f2f7, #f7fafc); /* Subtle radial gradient */
+            background-attachment: fixed; /* Ensures gradient stays fixed on scroll */
         }
-        .card-container {
-            perspective: 1000px;
+        .section-padding {
+            padding-top: 6rem;
+            padding-bottom: 6rem;
         }
-        .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        @media (min-width: 768px) {
+            .section-padding {
+                padding-top: 8rem;
+                padding-bottom: 8rem;
+            }
         }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1);
+        .nav-link.active {
+            color: #0d9488; /* teal-600 */
+            border-bottom: 2px solid #0d9488;
         }
-        .filter-btn.active {
+        /* Custom styles for enhanced attractiveness */
+        .hero-bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zm0 30V0h-2v4h-4v2h4v4h2V6h4V4h-4zm0 30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-30V0H4v4H0v2h4v4h2V6H4V4H0zm0 30V0H4v4H0v2h4v4h2V6H4V4H0zm0 30V0H4v4H0v2h4v4h2V6H4V4H0zM36 4v-4h-2v4h-4v2h4v4h2V6h4V4h-4zm0 30v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 30v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 4v-4H4v4H0v2h4v4h2V6H4V4H0zm0 30v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0 30v-4H4v4H0v2h4v4h2v-4h4v-2H6zM0 36v-2h2v2h4v2H2v4H0v-4zm0 30v-2h2v2h4v2H2v4H0v-4zM30 36v-2h2v2h4v2h-4v4h-2v-4zm0 30v-2h2v2h4v2h-4v4h-2v-4zM30 0v-2h2v2h4v2h-4v4h-2v-4zM0 0v-2h2v2h4v2H2v4H0v-4z'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-size: 60px 60px;
+            background-repeat: repeat;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-10px); /* More pronounced lift */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2), 0 10px 10px rgba(0,0,0,0.15); /* Stronger shadow */
+        }
+        .skill-item {
+            display: flex;
+            align-items: center;
+            background-color: #f0f9ff; /* teal-50 */
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1e8e4; /* teal-100 */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .skill-item:hover {
+            background-color: #e0f2f7; /* teal-100 */
+            transform: translateY(-3px); /* Slight lift on hover */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+        .skill-item span {
+            margin-right: 0.75rem;
+            font-size: 1.25rem; /* Larger icon */
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0; /* Start hidden */
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+
+        /* Section title underline effect */
+        .section-title-underline {
+            position: relative;
+            display: inline-block; /* To make width apply to content */
+        }
+        .section-title-underline::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -8px; /* Adjust distance from text */
+            width: 0;
+            height: 3px;
+            background-color: #0d9488; /* teal-600 */
+            transform: translateX(-50%);
+            transition: width 0.3s ease-out;
+        }
+        .section-title-underline:hover::after {
+            width: 100%;
+        }
+
+        /* Back to Top Button */
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             background-color: #0d9488; /* teal-600 */
             color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            border-radius: 9999px; /* Full circle */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px; /* Fixed size for circle */
+            height: 50px;
+        }
+        #back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        #back-to-top:hover {
+            background-color: #0f766e; /* darker teal */
+            transform: translateY(-5px);
         }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
 
-    <div class="container mx-auto px-4 py-8 md:py-12">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full z-20 top-0">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#hero" class="text-2xl font-bold text-teal-800 hover:text-teal-600 transition duration-300">Ishan Bathla</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#about" class="nav-link text-slate-600 hover:text-teal-600 transition duration-300 font-medium">About</a>
+                <a href="#skills" class="nav-link text-slate-600 hover:text-teal-600 transition duration-300 font-medium">Skills</a>
+                <a href="#projects" class="nav-link text-slate-600 hover:text-teal-600 transition duration-300 font-medium">Projects</a>
+                <a href="#contact" class="nav-link text-slate-600 hover:text-teal-600 transition duration-300 font-medium">Contact</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-slate-600 focus:outline-none p-2 rounded-md hover:bg-slate-100 transition duration-300">
+                <span class="text-2xl">☰</span>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-4">
+            <a href="#about" class="block px-4 py-2 text-slate-700 hover:bg-slate-100 transition duration-200">About</a>
+            <a href="#skills" class="block px-4 py-2 text-slate-700 hover:bg-slate-100 transition duration-200">Skills</a>
+            <a href="#projects" class="block px-4 py-2 text-slate-700 hover:bg-slate-100 transition duration-200">Projects</a>
+            <a href="#contact" class="block px-4 py-2 text-slate-700 hover:bg-slate-100 transition duration-200">Contact</a>
+        </div>
+    </nav>
 
-        <header class="text-center mb-10">
-            <h1 class="text-3xl md:text-5xl font-bold text-teal-800 mb-2">🇮🇳 Guide to the Indian Constitution</h1>
-            <p class="text-md md:text-lg text-slate-600 max-w-3xl mx-auto">An interactive tool to explore, search, and understand key articles of India's foundational legal document.</p>
-        </header>
+    <!-- Hero Section -->
+    <section id="hero" class="bg-gradient-to-r from-teal-500 to-teal-700 text-white section-padding flex items-center min-h-screen hero-bg-pattern">
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 animate-fade-in-up">Hi, I'm Ishan Bathla 👋</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto animate-fade-in-up delay-100">A passionate Senior Software Developer (Node.js) crafting scalable and efficient web experiences.</p>
+            <a href="#projects" class="bg-white text-teal-700 hover:bg-teal-100 font-semibold py-3 px-8 rounded-full shadow-lg transition duration-300 inline-block transform hover:scale-105 animate-fade-in-up delay-200">View My Work</a>
+        </div>
+    </section>
 
-        <div class="sticky top-0 bg-slate-50/80 backdrop-blur-sm z-10 py-4 mb-8">
-            <div class="max-w-4xl mx-auto">
-                <div class="flex flex-col md:flex-row gap-4">
-                    <div class="flex-grow">
-                        <input type="text" id="searchInput" placeholder="Search by article number or keyword (e.g., '21' or 'Freedom')" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-shadow duration-200 shadow-sm">
+    <!-- About Section -->
+    <section id="about" class="bg-white section-padding">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-teal-800 mb-10 section-title-underline">About Me</h2>
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="w-full md:w-1/3 flex-shrink-0">
+                    <img src="http://googleusercontent.com/file_content/1" alt="Ishan Bathla Photo" class="rounded-full w-48 h-48 mx-auto object-cover shadow-xl border-4 border-teal-200 transform hover:scale-105 transition duration-300">
+                </div>
+                <div class="w-full md:w-2/3 text-lg text-slate-700 leading-relaxed">
+                    <p class="mb-4">Hello! I'm Ishan Bathla, a dedicated and result-driven Backend Developer with over 5 years of experience in building scalable server-side applications using Node.js and MongoDB. I thrive on transforming complex ideas into intuitive and visually appealing digital solutions.</p>
+                    <p class="mb-4">My journey in software development began over 5 years ago, driven by a curiosity for how technology can solve real-world problems. I specialize in API development, real-time communication, third-party integrations, and cloud deployment.</p>
+                    <p>I am passionate about delivering clean, efficient, and maintainable code while collaborating with cross-functional teams to deliver high-quality software solutions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="bg-slate-100 section-padding">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-teal-800 mb-10 section-title-underline">My Skills</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 transition duration-300 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-teal-700 mb-4">Languages & Frameworks</h3>
+                    <ul class="list-none space-y-3 text-slate-700">
+                        <li class="skill-item"><span>💻</span> Node.js, Express.js, Hapi.js</li>
+                        <li class="skill-item"><span>🐍</span> Python (mention if applicable)</li>
+                        <li class="skill-item"><span>🌐</span> RESTful APIs, JSON</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 transition duration-300 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-teal-700 mb-4">Databases & Caching</h3>
+                    <ul class="list-none space-y-3 text-slate-700">
+                        <li class="skill-item"><span>🗄️</span> MongoDB, MySQL, Sequelize</li>
+                        <li class="skill-item"><span>🚀</span> Redis</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 transition duration-300 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-teal-700 mb-4">Integrations & DevOps</h3>
+                    <ul class="list-none space-y-3 text-slate-700">
+                        <li class="skill-item"><span>🔗</span> Stripe, SendGrid, Twilio, FCM</li>
+                        <li class="skill-item"><span>☁️</span> AWS EC2, S3</li>
+                        <li class="skill-item"><span>🛠️</span> Git, Bitbucket, JIRA, Postman</li>
+                        <li class="skill-item"><span>⚙️</span> Make.com, Zapier, Airtable, Intercom, Zendesk, QuickBooks</li>
+                        <li class="skill-item"><span>🔐</span> OAuth2, AWS Cognito</li>
+                        <li class="skill-item"><span>🔔</span> Push Notifications, Cron Jobs</li>
+                        <li class="skill-item"><span>⚡</span> Socket.IO (Real-time Communication)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="bg-white section-padding">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-teal-800 mb-10 section-title-underline">My Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project: Kroolo (AI Productivity App) -->
+                <div class="bg-slate-50 rounded-xl shadow-lg border border-slate-200 overflow-hidden transition duration-300 card-hover-effect">
+                    <img src="https://placehold.co/600x400/D1E8E4/0D9488?text=Kroolo+App" alt="Kroolo App Image" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-teal-700 mb-2">🧠 Kroolo (AI Productivity App)</h3>
+                        <p class="text-slate-700 text-sm mb-4">Backend developed using Node.js and MongoDB to streamline workflows with intelligent task management and AI agents.</p>
+                        <button class="project-toggle bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition duration-300" data-project="kroolo">Learn More</button>
+                        <div id="kroolo-details" class="hidden mt-4 text-slate-600 text-sm">
+                            <p class="mb-2">Designed to enhance productivity through advanced task management and AI-driven insights. Focused on creating robust and scalable backend services.</p>
+                            <p>Key contributions included database schema design and API development for AI integration.</p>
+                            <!-- <a href="#" target="_blank" class="text-teal-600 hover:underline mt-2 inline-block">View Live Demo</a> -->
+                        </div>
                     </div>
-                    <div class="flex items-center justify-center gap-2">
-                        <button class="filter-btn active px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-white border border-slate-300 hover:bg-teal-500 hover:text-white" data-filter="all">All</button>
-                        <button class="filter-btn px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-white border border-slate-300 hover:bg-teal-500 hover:text-white" data-filter="famous">Famous Articles</button>
-                        <button class="filter-btn px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-white border border-slate-300 hover:bg-teal-500 hover:text-white" data-filter="state">State-related</button>
+                </div>
+
+                <!-- Project: Sieve (News App) -->
+                <div class="bg-slate-50 rounded-xl shadow-lg border border-slate-200 overflow-hidden transition duration-300 card-hover-effect">
+                    <img src="https://placehold.co/600x400/D1E8E4/0D9488?text=Sieve+News+App" alt="Sieve News App Image" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-teal-700 mb-2">📰 Sieve (News App)</h3>
+                        <p class="text-slate-700 text-sm mb-4">Subscription-based platform for news, with focus on database schema design and backend service development using Node.js and MongoDB.</p>
+                        <button class="project-toggle bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition duration-300" data-project="sieve">Learn More</button>
+                        <div id="sieve-details" class="hidden mt-4 text-slate-600 text-sm">
+                            <p class="mb-2">Managed the complete backend architecture for a news platform, ensuring efficient data retrieval and secure subscription handling.</p>
+                            <p>Implemented robust APIs for content delivery and user management.</p>
+                            <!-- <a href="#" target="_blank" class="text-teal-600 hover:underline mt-2 inline-block">View Live Demo</a> -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Privee (Social Media App) -->
+                <div class="bg-slate-50 rounded-xl shadow-lg border border-slate-200 overflow-hidden transition duration-300 card-hover-effect">
+                    <img src="https://placehold.co/600x400/D1E8E4/0D9488?text=Privee+App" alt="Privee App Image" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-teal-700 mb-2">🔒 Privee (Social Media App)</h3>
+                        <p class="text-slate-700 text-sm mb-4">Privacy-first social media app developed with Node.js and MongoDB, designed for subscription-based user experiences without ads.</p>
+                        <button class="project-toggle bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition duration-300" data-project="privee">Learn More</button>
+                        <div id="privee-details" class="hidden mt-4 text-slate-600 text-sm">
+                            <p class="mb-2">Focused on user data privacy and secure interactions within a social networking environment. Implemented subscription logic and ad-free experience.</p>
+                            <p>Contributed to scalable database design and API development for core social features.</p>
+                            <!-- <a href="#" target="_blank" class="text-teal-600 hover:underline mt-2 inline-block">View Live Demo</a> -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: SaaS Platform (Food Delivery, E-commerce, Home Services) -->
+                <div class="bg-slate-50 rounded-xl shadow-lg border border-slate-200 overflow-hidden transition duration-300 card-hover-effect">
+                    <img src="https://placehold.co/600x400/D1E8E4/0D9488?text=SaaS+Platform" alt="SaaS Platform Image" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-teal-700 mb-2">🛒 SaaS Platform (Multi-domain)</h3>
+                        <p class="text-slate-700 text-sm mb-4">Built using Node.js, Express.js, and MySQL for food delivery, e-commerce, and home services. Implemented AWS hosting, cron jobs, and data migration with Sequelize.</p>
+                        <button class="project-toggle bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition duration-300" data-project="saas">Learn More</button>
+                        <div id="saas-details" class="hidden mt-4 text-slate-600 text-sm">
+                            <p class="mb-2">Developed a versatile SaaS backend supporting diverse business models. Handled infrastructure deployment on AWS and ensured data integrity during migrations.</p>
+                            <p>Managed cron jobs for scheduled tasks and optimized database interactions using Sequelize.</p>
+                            <!-- <a href="#" target="_blank" class="text-teal-600 hover:underline mt-2 inline-block">View Live Demo</a> -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Thrizer (Behavioral Health App) -->
+                <div class="bg-slate-50 rounded-xl shadow-lg border border-slate-200 overflow-hidden transition duration-300 card-hover-effect">
+                    <img src="https://placehold.co/600x400/D1E8E4/0D9488?text=Thrizer+App" alt="Thrizer App Image" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-teal-700 mb-2">💚 Thrizer (Behavioral Health App)</h3>
+                        <p class="text-slate-700 text-sm mb-4">End-to-end backend development with Stripe integration and Firebase notifications, enabling clinician-client booking features.</p>
+                        <button class="project-toggle bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition duration-300" data-project="thrizer">Learn More</button>
+                        <div id="thrizer-details" class="hidden mt-4 text-slate-600 text-sm">
+                            <p class="mb-2">Implemented secure payment processing via Stripe and real-time notifications using Firebase. Developed robust booking and scheduling functionalities.</p>
+                            <p>Ensured data security and compliance for sensitive health information.</p>
+                            <!-- <a href="#" target="_blank" class="text-teal-600 hover:underline mt-2 inline-block">View Live Demo</a> -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: SOS (Breakdown Assistance App) -->
+                <div class="bg-slate-50 rounded-xl shadow-lg border border-slate-200 overflow-hidden transition duration-300 card-hover-effect">
+                    <img src="https://placehold.co/600x400/D1E8E4/0D9488?text=SOS+App" alt="SOS App Image" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-teal-700 mb-2">🆘 SOS (Breakdown Assistance App)</h3>
+                        <p class="text-slate-700 text-sm mb-4">Geolocation-based platform to connect users with nearby garage services. Developed a complete backend using Node.js and MongoDB.</p>
+                        <button class="project-toggle bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition duration-300" data-project="sos">Learn More</button>
+                        <div id="sos-details" class="hidden mt-4 text-slate-600 text-sm">
+                            <p class="mb-2">Implemented real-time geolocation tracking and matching algorithms to connect users with service providers efficiently.</p>
+                            <p>Focused on high availability and performance for critical assistance services.</p>
+                            <!-- <a href="#" target="_blank" class="text-teal-600 hover:underline mt-2 inline-block">View Live Demo</a> -->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <main id="articlesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Article cards will be dynamically inserted here -->
-        </main>
+    </section>
 
-    </div>
+    <!-- Contact Section -->
+    <section id="contact" class="bg-slate-100 section-padding">
+        <div class="container mx-auto px-4 max-w-2xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-teal-800 mb-10 section-title-underline">Get in Touch</h2>
+            <p class="text-center text-lg text-slate-700 mb-8">Have a question or want to collaborate? Feel free to reach out!</p>
+            <form class="bg-white p-8 rounded-xl shadow-md border border-slate-200">
+                <div class="mb-4">
+                    <label for="name" class="block text-slate-700 text-sm font-bold mb-2">Name</label>
+                    <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="Your Name">
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-slate-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" value="ishan.bathla@appinventiv.com" readonly>
+                </div>
+                <div class="mb-6">
+                    <label for="message" class="block text-slate-700 text-sm font-bold mb-2">Message</label>
+                    <textarea id="message" name="message" rows="6" class="shadow appearance-none border rounded w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="Your message..."></textarea>
+                </div>
+                <div class="flex items-center justify-center">
+                    <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline transition duration-300">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-white py-8 text-center">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2024 Ishan Bathla. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <!-- Placeholder links, replace with actual ones -->
+                <a href="#" class="text-slate-300 hover:text-teal-400 transition duration-300">LinkedIn</a>
+                <a href="#" class="text-slate-300 hover:text-teal-400 transition duration-300">GitHub</a>
+                <a href="#" class="text-slate-300 hover:text-teal-400 transition duration-300">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" title="Back to Top">↑</button>
 
     <script>
-        const articles = [
-            { id: '14', subject: 'Equality before law', category: 'famous' },
-            { id: '15', subject: 'Prohibition of discrimination', category: 'famous' },
-            { id: '17', subject: 'Abolition of untouchability', category: 'famous' },
-            { id: '19', subject: 'Freedom of speech and expression', category: 'famous' },
-            { id: '21', subject: 'Protection of life and personal liberty', category: 'famous' },
-            { id: '21A', subject: 'Right to education (6–14 years)', category: 'famous' },
-            { id: '32', subject: 'Right to constitutional remedies (Dr. Ambedkar called it the "heart and soul")', category: 'famous' },
-            { id: '44', subject: 'Uniform Civil Code (Directive Principle)', category: 'famous' },
-            { id: '51A', subject: 'Fundamental Duties', category: 'famous' },
-            { id: '72', subject: 'President\'s power to pardon', category: 'famous' },
-            { id: '110', subject: 'Money Bill definition', category: 'famous' },
-            { id: '112', subject: 'Union Budget (Annual Financial Statement)', category: 'famous' },
-            { id: '123', subject: 'President\'s ordinance-making power', category: 'famous' },
-            { id: '131-136', subject: 'Powers of the Supreme Court', category: 'famous' },
-            { id: '148', subject: 'Comptroller and Auditor General (CAG)', category: 'famous' },
-            { id: '243', subject: 'Panchayati Raj (73rd Amendment)', category: 'famous' },
-            { id: '280', subject: 'Finance Commission', category: 'famous' },
-            { id: '324', subject: 'Election Commission', category: 'famous' },
-            { id: '356', subject: 'President’s Rule (State Emergency)', category: 'famous' },
-            { id: '370', subject: 'Special status to Jammu & Kashmir (now revoked in 2019)', category: 'famous' },
-            { id: '371', subject: 'Special provisions for some states like Maharashtra, Gujarat, Nagaland, etc.', category: 'famous' },
-            { id: '1', subject: 'India is a Union of States; lists Indian states and territories.', category: 'state' },
-            { id: '2', subject: 'Parliament can admit or establish new states into the Union.', category: 'state' },
-            { id: '3', subject: 'Parliament can create, merge, split, rename or change boundaries of states.', category: 'state' },
-            { id: '4', subject: 'Laws under Article 2 & 3 are not called Constitutional Amendments.', category: 'state' },
-            { id: '239', subject: 'How Union Territories are administered (by President through an Administrator or LG).', category: 'state' },
-            { id: '239A', subject: 'Special provisions for Puducherry (elected assembly + council of ministers).', category: 'state' },
-            { id: '239AA', subject: 'Special status to Delhi (National Capital Territory) with assembly & CM.', category: 'state' },
-            { id: '240', subject: 'President can make regulations for UTs like Andaman & Lakshadweep.', category: 'state' }
-        ];
-
-        const articlesGrid = document.getElementById('articlesGrid');
-        const searchInput = document.getElementById('searchInput');
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        let currentFilter = 'all';
-
-        const renderArticles = () => {
-            articlesGrid.innerHTML = '';
-            const searchTerm = searchInput.value.toLowerCase();
-
-            const filteredArticles = articles.filter(article => {
-                const categoryMatch = currentFilter === 'all' || article.category === currentFilter;
-                const searchMatch = article.id.toLowerCase().includes(searchTerm) || article.subject.toLowerCase().includes(searchTerm);
-                return categoryMatch && searchMatch;
-            });
-
-            if (filteredArticles.length === 0) {
-                articlesGrid.innerHTML = `<p class="text-slate-500 col-span-full text-center py-10">No articles found matching your criteria.</p>`;
-                return;
-            }
-
-            filteredArticles.forEach(article => {
-                const card = document.createElement('div');
-                card.className = 'card-container';
-                card.innerHTML = `
-                    <div class="card bg-white rounded-xl shadow-md p-6 flex flex-col h-full border border-slate-200">
-                        <div class="flex-shrink-0 mb-3">
-                            <span class="text-sm font-semibold text-teal-600 bg-teal-100 px-3 py-1 rounded-full">Article ${article.id}</span>
-                        </div>
-                        <div class="flex-grow">
-                            <p class="text-slate-700 text-lg">${article.subject}</p>
-                        </div>
-                    </div>
-                `;
-                articlesGrid.appendChild(card);
-            });
-        };
-
-        searchInput.addEventListener('keyup', renderArticles);
-
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                currentFilter = button.dataset.filter;
-                renderArticles();
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close mobile menu if open
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
             });
         });
+
+        // Toggle project details
+        document.querySelectorAll('.project-toggle').forEach(button => {
+            button.addEventListener('click', function() {
+                const projectId = this.dataset.project;
+                const details = document.getElementById(`${projectId}-details`);
+                details.classList.toggle('hidden');
+                if (details.classList.contains('hidden')) {
+                    this.textContent = 'Learn More';
+                } else {
+                    this.textContent = 'Show Less';
+                }
+            });
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Back to Top button logic
+        const backToTopButton = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
