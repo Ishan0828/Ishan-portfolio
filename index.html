@@ -136,6 +136,33 @@
             background-color: #4299e1; /* darker blue */
             transform: translateY(-5px);
         }
+
+        /* Chat UI Specific Styles */
+        .chat-container {
+            max-height: 60vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .chat-message {
+            padding: 1rem;
+            border-radius: 1.5rem;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #3182ce;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0.5rem;
+        }
+        .ai-message {
+            background-color: #4a5568;
+            color: #e2e8f0;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.5rem;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -149,6 +176,7 @@
                 <a href="#skills" class="nav-link text-gray-300 hover:text-blue-400 transition duration-300 font-medium">Skills</a>
                 <a href="#experience" class="nav-link text-gray-300 hover:text-blue-400 transition duration-300 font-medium">Experience</a>
                 <a href="#projects" class="nav-link text-gray-300 hover:text-blue-400 transition duration-300 font-medium">Projects</a>
+                <a href="#aitwin" class="nav-link text-gray-300 hover:text-blue-400 transition duration-300 font-medium">AI Twin</a>
                 <a href="#contact" class="nav-link text-gray-300 hover:text-blue-400 transition duration-300 font-medium">Contact</a>
             </div>
             <button id="mobile-menu-button" class="md:hidden text-gray-300 focus:outline-none p-2 rounded-md hover:bg-gray-800 transition duration-300">
@@ -161,6 +189,7 @@
             <a href="#skills" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 transition duration-200">Skills</a>
             <a href="#experience" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 transition duration-200">Experience</a>
             <a href="#projects" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 transition duration-200">Projects</a>
+            <a href="#aitwin" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 transition duration-200">AI Twin</a>
             <a href="#contact" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 transition duration-200">Contact</a>
         </div>
     </nav>
@@ -300,11 +329,31 @@
         </div>
     </section>
 
+    <!-- New AI Twin Section -->
+    <section id="aitwin" class="bg-gray-800 section-padding">
+        <div class="container mx-auto px-4 max-w-2xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-400 mb-10 section-title-underline">My AI Twin</h2>
+            <p class="text-center text-lg text-gray-300 mb-8">Chat with my AI twin to learn more about me and my experience. It has been trained on my portfolio!</p>
+            <div class="bg-gray-700 p-6 rounded-xl shadow-md border border-gray-600 flex flex-col h-[70vh]">
+                <!-- Chat messages container -->
+                <div id="chat-messages" class="chat-container flex-grow p-4 bg-gray-900 rounded-lg shadow-inner mb-4">
+                    <div class="ai-message text-sm">Hello there! I'm Ishan's AI twin. Ask me anything about his projects, skills, or experience.</div>
+                </div>
+
+                <!-- Chat input form -->
+                <form id="chat-form" class="flex gap-2">
+                    <input type="text" id="user-input" class="flex-grow shadow appearance-none border rounded-full py-3 px-6 text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 border-gray-700" placeholder="Ask a question..." required>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline transition duration-300">Send</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
     <!-- Education Section -->
-    <section id="education" class="bg-gray-800 section-padding">
+    <section id="education" class="bg-gray-900 section-padding">
         <div class="container mx-auto px-4 max-w-4xl">
             <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-400 mb-10 section-title-underline">Education</h2>
-            <div class="bg-gray-700 p-8 rounded-xl shadow-md border border-gray-600">
+            <div class="bg-gray-800 p-8 rounded-xl shadow-md border border-gray-700">
                 <div class="mb-6">
                     <h3 class="text-xl font-semibold text-blue-400">B.Tech in Computer Science</h3>
                     <p class="text-gray-300">Seth Jai Parkash Mukand Lal Institute of Engineering & Technology, Radaur</p>
@@ -320,22 +369,22 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="bg-gray-900 section-padding">
+    <section id="contact" class="bg-gray-800 section-padding">
         <div class="container mx-auto px-4 max-w-2xl">
             <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-400 mb-10 section-title-underline">Get in Touch</h2>
             <p class="text-center text-lg text-gray-300 mb-8">Have a question or want to collaborate? Feel free to reach out!</p>
-            <form action="https://formspree.io/f/xdkdzeay" method="POST" class="bg-gray-800 p-8 rounded-xl shadow-md border border-gray-700">
+            <form action="https://formspree.io/f/xdkdzeay" method="POST" class="bg-gray-700 p-8 rounded-xl shadow-md border border-gray-600">
                 <div class="mb-4">
                     <label for="name" class="block text-gray-300 text-sm font-bold mb-2">Name</label>
-                    <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 border-gray-600" placeholder="Your Name">
+                    <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 border-gray-700" placeholder="Your Name">
                 </div>
                 <div class="mb-4">
                     <label for="email" class="block text-gray-300 text-sm font-bold mb-2">Email</label>
-                    <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 border-gray-600" value="ishan.bathla@appinventiv.com" readonly>
+                    <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 border-gray-700" value="ishan.bathla@appinventiv.com" readonly>
                 </div>
                 <div class="mb-6">
                     <label for="message" class="block text-gray-300 text-sm font-bold mb-2">Message</label>
-                    <textarea id="message" name="message" rows="6" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 border-gray-600" placeholder="Your message..."></textarea>
+                    <textarea id="message" name="message" rows="6" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 border-gray-700" placeholder="Your message..."></textarea>
                 </div>
                 <div class="flex items-center justify-center">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline transition duration-300">Send Message</button>
@@ -384,7 +433,7 @@
         // Back to Top button logic
         const backToTopButton = document.getElementById('back-to-top');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) { // Shaow button after scrolling 300px
+            if (window.scrollY > 300) { // Show button after scrolling 300px
                 backToTopButton.classList.add('show');
             } else {
                 backToTopButton.classList.remove('show');
@@ -397,6 +446,69 @@
                 behavior: 'smooth'
             });
         });
+
+        // AI Twin Chat Logic
+        const chatForm = document.getElementById('chat-form');
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const userMessage = userInput.value.trim();
+            if (userMessage === '') return;
+
+            // Display user message
+            appendMessage(userMessage, 'user');
+            userInput.value = '';
+
+            // Show a loading indicator
+            const loadingIndicator = appendMessage('...', 'ai', true);
+
+            try {
+                // The API endpoint for your LangChain application.
+                // You must replace this URL with the actual public URL of your deployed app.
+                const apiEndpoint = 'http://your-langchain-api-endpoint/chat'; 
+                
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: userMessage }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API returned an error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                
+                // Remove loading indicator
+                loadingIndicator.remove();
+                
+                // Display AI response
+                appendMessage(data.response, 'ai');
+
+            } catch (error) {
+                console.error('Error fetching AI response:', error);
+                // Remove loading indicator and display an error message
+                loadingIndicator.remove();
+                appendMessage('Sorry, I am unable to connect to the AI twin right now. Please try again later.', 'ai');
+            }
+        });
+
+        function appendMessage(text, sender, isLoading = false) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message', sender === 'user' ? 'user-message' : 'ai-message');
+            messageElement.textContent = text;
+            chatMessages.appendChild(messageElement);
+
+            // Scroll to the bottom of the chat window
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            return messageElement;
+        }
     </script>
 </body>
 </html>
