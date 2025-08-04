@@ -468,14 +468,14 @@
             try {
                 // The API endpoint for your LangChain application.
                 // You must replace this URL with the actual public URL of your deployed app.
-                const apiEndpoint = 'http://your-langchain-api-endpoint/chat'; 
+                const apiEndpoint = 'https://6219ded9628d.ngrok-free.app/ask'; 
                 
                 const response = await fetch(apiEndpoint, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ message: userMessage }),
+                    body: JSON.stringify({ query: userMessage }),
                 });
 
                 if (!response.ok) {
